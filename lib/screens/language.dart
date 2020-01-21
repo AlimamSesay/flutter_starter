@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_starter/providers/app_provider.dart';
+import 'package:flutter_starter/util/constants.dart';
 import 'package:provider/provider.dart';
 import '../generated/i18n.dart';
-import '../models/app.dart';
 
 class Language extends StatefulWidget {
   @override
@@ -44,11 +45,10 @@ class _LanguageState extends State<Language> {
               ),
               title: Text(S.of(context).english),
               onTap: () {
-                Provider.of<AppModel>(context).changeLanguage('en');
+                Provider.of<AppProvider>(context, listen: false).changeLanguage('en');
               },
             ),
           ),
-
           Divider(
             color: Colors.black12,
             height: 1.0,
@@ -63,9 +63,30 @@ class _LanguageState extends State<Language> {
                   width: 30, height: 20, fit: BoxFit.cover),
               title: Text(S.of(context).arabic),
               onTap: () {
-                Provider.of<AppModel>(context).changeLanguage('ar');
+                Provider.of<AppProvider>(context, listen: false).changeLanguage('ar');
               },
             ),
+          ),
+          SwitchListTile(
+            secondary: Icon(
+              Icons.location_searching,
+            ),
+            title: Text(
+              'Dark Mode',
+            ),
+            value:
+                Provider.of<AppProvider>(context).theme == Constants.lightTheme
+                    ? false
+                    : true,
+            onChanged: (v) {
+              if (v) {
+                Provider.of<AppProvider>(context, listen: false)
+                    .changeTheme(isLight: false);
+              } else {
+                Provider.of<AppProvider>(context, listen: false)
+                    .changeTheme(isLight: true);
+              }
+            },
           )
         ],
       ),

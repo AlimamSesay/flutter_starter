@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_starter/provider_setup.dart';
+import 'package:flutter_starter/providers/app_provider.dart';
 import 'package:flutter_starter/screens/home.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'generated/i18n.dart';
-import 'models/app.dart';
 
 class App extends StatefulWidget {
   @override
@@ -17,49 +16,23 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  final _app = AppModel();
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AppModel>.value(
-      value: _app,
-      child: Consumer<AppModel>(
-        builder: (context, value, child) {
-          return MultiProvider(
-            providers: providers,
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              // locale: new Locale(Provider.of<AppModel>(context).locale, ""),
-
-              localizationsDelegates: [
-                S.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              supportedLocales: S.delegate.supportedLocales,
-              // localeListResolutionCallback:  S.delegate.listResolution(fallback: const Locale('en', '')),
-
-              // Returns a locale which will be used by the app
-              localeResolutionCallback: (locale, supportedLocales) {
-                // Check if the current device locale is supported
-                for (var supportedLocale in supportedLocales) {
-                  if (supportedLocale.languageCode == locale.languageCode &&
-                      supportedLocale.countryCode == locale.countryCode) {
-                    return supportedLocale;
-                  }
-                }
-                // If the locale of the device is not supported, use the first one
-                // from the list (English, in this case).
-                return supportedLocales.first;
-              },
-              home: SplashScreen(),
-              theme: Provider.of<AppModel>(context).darkTheme
-                  ? ThemeData.dark()
-                  : ThemeData.light(),
-            ),
-          );
-        },
-      ),
+    return Consumer<AppProvider>(
+      builder: (context, AppProvider appProvider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          locale: Locale(appProvider.locale, ""),
+          localizationsDelegates: [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          theme: appProvider.theme,
+          home: SplashScreen(),
+        );
+      },
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_starter/generated/i18n.dart';
-import 'package:flutter_starter/models/app.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_starter/screens/language.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -13,16 +12,23 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppModel>(
-      builder: (context, value, child) {
-        return SafeArea(
-          child: Scaffold(
-            body: Center(
+    return SafeArea(
+      child: Scaffold(
+        body: ListView(
+          children: <Widget>[
+            Center(
               child: Text(S.of(context).app_name),
             ),
-          ),
-        );
-      },
+            RaisedButton(
+              child: Text('Language Screen'),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Language()));
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }
